@@ -2,3 +2,10 @@ object_type: global_settings
 overrides:
     "xmla.auth.token.enabled": "true"
     "xmla.discover.properties.daxdialect": "tabular"
+    # ATSCALE-52093. Sort NULLs where Postgres sorts them -- last ascending, first
+    # descending -- when an ORDER BY on the SQL front end states no placement of its
+    # own. The engine otherwise normalises every warehouse to "NULL sorts smallest",
+    # which is Hive's rule and the opposite of Postgres in both directions, so a
+    # client speaking the Postgres wire protocol gets an order Postgres would not
+    # give it. A placement written into the query wins over this either way.
+    "query.language.sql.ordering.postgresNullPlacement": "true"
